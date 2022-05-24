@@ -6,7 +6,6 @@ const ACCESSTOKEN_EXPIRATION = '60s';
 const REFRESHTOKEN_SECRET = process.env.REFRESHTOKEN_SECRET;
 const REFRESHTOKEN_EXPIRATION = '7d';
 
-
 export const authService = {
     async generateAccessToken(userId) {
         return await jwt.sign(

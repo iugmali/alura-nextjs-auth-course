@@ -1,16 +1,52 @@
+import {useState} from "react";
+import {useRouter} from "next/router";
+import {authService} from "../src/services/auth/authService";
+
 export default function HomeScreen() {
+  const router = useRouter();
+  const [values, setValues] = useState({
+    usuario: "iugmali",
+    senha: "safepassword"
+  });
+  function handleChange(event) {
+    const fieldValue = event.target.value;
+    const fieldName = event.target.name;
+    setValues((currentValue) => {
+      return {
+        ...currentValue,
+        [fieldName]: fieldValue
+      }
+    })
+  }
   return (
     <div>
       <h1>Login</h1>
-      <form>
+      <form onSubmit={(event) => {
+        event.preventDefault();
+        authService
+          .login({
+          username: values.usuario,
+          password: values.senha,
+          })
+          .then(() => {
+            router.push('auth-page-ssr');
+          })
+          .catch(() => {
+            alert('usuário e/ou senha inválidos')
+          })
+        // router.push('auth-page-static');
+      }}>
         <input
           placeholder="Usuário" name="usuario"
-          defaultValue="omariosouto"
+          value={values.usuario} onChange={handleChange}
         />
         <input
           placeholder="Senha" name="senha" type="password"
-          defaultValue="safepassword"
+          value={values.senha} onChange={handleChange}
         />
+        <pre>
+          {JSON.stringify(values, null, 2)}
+        </pre>
         <div>
           <button>
             Entrar
